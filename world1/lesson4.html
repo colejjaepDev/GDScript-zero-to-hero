@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Conditionals & Logic</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);color:#e2e8f0;min-height:100vh;padding:20px}.container{max-width:900px;margin:0 auto}.nav-bar{display:flex;justify-content:space-between;margin-bottom:30px}.nav-btn{background:rgba(255,255,255,0.1);color:white;border:2px solid rgba(255,255,255,0.3);padding:10px 20px;border-radius:20px;cursor:pointer;text-decoration:none;transition:all 0.3s ease}.nav-btn:hover{background:rgba(255,255,255,0.2)}header{background:rgba(16,185,129,0.2);border-left:5px solid #10b981;padding:30px;border-radius:10px;margin-bottom:30px}h1{font-size:2.5em;margin-bottom:10px}.content-section{background:rgba(255,255,255,0.05);border-radius:10px;padding:30px;margin:25px 0;line-height:1.8}.content-section h2{color:#10b981;margin-bottom:20px;font-size:1.8em}.content-section h3{color:#60a5fa;margin:25px 0 15px 0;font-size:1.4em}.code-block{background:#1e293b;border:2px solid #334155;border-radius:8px;padding:20px;margin:20px 0;font-family:'Courier New',monospace;overflow-x:auto}ul,ol{margin-left:25px;line-height:1.8}li{margin:10px 0}code{background:rgba(16,185,129,0.2);padding:2px 6px;border-radius:3px;color:#10b981;font-family:'Courier New',monospace}.btn{background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:white;border:none;padding:15px 40px;border-radius:25px;font-size:1.1em;cursor:pointer;transition:all 0.3s ease}.btn:hover{transform:scale(1.05);box-shadow:0 10px 30px rgba(16,185,129,0.3)}</style>
+</head><body><div class="container">
+<div class="nav-bar"><a href="index.html" class="nav-btn">← World 1</a><a href="lab2.html" class="nav-btn">Next →</a></div>
+<header><h1>⚡ Conditionals & Logic</h1><p>+75 XP</p></header>
+
+<div class="content-section">
+    <h2>⚡ Control Flow & Conditionals</h2>
+    <p>Make decisions in your game code!</p>
+
+    <h3>If Statements</h3>
+    <div class="code-block">
+<pre>var health = 50
+
+if health < 20:
+    print("Critical health!")
+elif health < 50:
+    print("Low health")
+else:
+    print("Healthy")
+</pre>
+    </div>
+
+    <h3>Comparison Operators</h3>
+    <ul>
+        <li><code>==</code> Equal to</li>
+        <li><code>!=</code> Not equal to</li>
+        <li><code>&lt;</code> Less than</li>
+        <li><code>&gt;</code> Greater than</li>
+        <li><code>&lt;=</code> Less than or equal</li>
+        <li><code>&gt;=</code> Greater than or equal</li>
+    </ul>
+
+    <h3>Logical Operators</h3>
+    <div class="code-block">
+<pre># and, or, not (same as Python!)
+if health > 0 and has_weapon:
+    attack_enemy()
+
+if is_invincible or health > 50:
+    take_risk()
+
+if not is_dead:
+    keep_playing()
+</pre>
+    </div>
+
+    <h3>Match Statement (like switch)</h3>
+    <p>GDScript has a powerful match statement:</p>
+    <div class="code-block">
+<pre>var state = "running"
+
+match state:
+    "idle":
+        play_idle_animation()
+    "running":
+        play_run_animation()
+    "jumping":
+        play_jump_animation()
+    _:  # default case
+        print("Unknown state")
+</pre>
+    </div>
+
+    <h3>Ternary Operator</h3>
+    <div class="code-block">
+<pre># condition if true else false
+var damage = 20 if has_power_up else 10
+var color = Color.GREEN if health > 50 else Color.RED
+</pre>
+    </div>
+
+    <h3>Game Example: Enemy AI</h3>
+    <div class="code-block">
+<pre>func update_enemy_ai(player_distance: float):
+    if player_distance < 50:
+        # Player is very close
+        attack_player()
+    elif player_distance < 200:
+        # Player is nearby
+        move_towards_player()
+    else:
+        # Player is far
+        patrol()
+</pre>
+    </div>
+</div>
+
+<div style="text-align:center;margin:40px 0"><button class="btn" onclick="complete()">✓ Mark Complete</button></div>
+</div><script>function complete(){const p=JSON.parse(localStorage.getItem('gdscript_quest_progress'))||{xp:0,completedLessons:[],achievements:[]};if(!p.completedLessons.includes('w1_l4')){p.completedLessons.push('w1_l4');p.xp+=75;localStorage.setItem('gdscript_quest_progress',JSON.stringify(p))}window.location.href='lab2.html'}</script></body></html>

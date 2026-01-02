@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Lab 3: Data Structure Arena</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);color:#e2e8f0;min-height:100vh;padding:20px}.container{max-width:900px;margin:0 auto}.nav-btn{background:rgba(255,255,255,0.1);color:white;border:2px solid rgba(255,255,255,0.3);padding:10px 20px;border-radius:20px;cursor:pointer;text-decoration:none;display:inline-block;margin-bottom:20px}header{background:rgba(139,92,246,0.2);border:3px solid #8b5cf6;padding:30px;border-radius:15px;text-align:center;margin-bottom:30px}h1{font-size:2.5em}.challenge{background:rgba(255,255,255,0.05);border-radius:10px;padding:25px;margin:20px 0}.challenge h3{color:#a78bfa;margin-bottom:15px}textarea{width:100%;min-height:150px;background:#1e293b;color:#e2e8f0;border:2px solid #334155;border-radius:8px;padding:15px;font-family:'Courier New',monospace;font-size:1em;margin:10px 0}.btn{background:linear-gradient(135deg,#8b5cf6,#7c3aed);color:white;border:none;padding:12px 30px;border-radius:25px;font-size:1em;cursor:pointer;margin:10px 5px}.output{background:#1e293b;border:2px solid #334155;padding:15px;margin-top:10px;min-height:60px;border-radius:8px}.success{color:#10b981}.error{color:#ef4444}</style>
+</head><body><div class="container">
+<a href="index.html" class="nav-btn">← Back</a>
+<header><h1>🔧 Lab 3: Data Structure Arena</h1><p>+100 XP | Hands-on Practice</p></header>
+
+<div class="challenge">
+<h3>Challenge 1: Character Stats</h3>
+<p>Create variables for a game character with: name (String), health (int), mana (float), is_alive (bool)</p>
+<textarea id="code1" placeholder="Type your GDScript code here...">extends Node
+
+func _ready():</textarea>
+<button class="btn" onclick="check(1)">Check Answer</button>
+<div class="output" id="out1"></div>
+</div>
+
+<div class="challenge">
+<h3>Challenge 2: Vector Math</h3>
+<p>Create two Vector2 variables and print their sum</p>
+<textarea id="code2">extends Node
+
+func _ready():</textarea>
+<button class="btn" onclick="check(2)">Check Answer</button>
+<div class="output" id="out2"></div>
+</div>
+
+<div class="challenge">
+<h3>Challenge 3: Type Conversion</h3>
+<p>Convert the string "42" to an integer and double it</p>
+<textarea id="code3">extends Node
+
+func _ready():</textarea>
+<button class="btn" onclick="check(3)">Check Answer</button>
+<div class="output" id="out3"></div>
+</div>
+
+<div style="text-align:center;margin:40px 0">
+<button class="btn" style="background:linear-gradient(135deg,#10b981,#059669);font-size:1.2em;padding:15px 40px" onclick="complete()">✓ Complete Lab</button>
+</div>
+
+<script>
+let completed = {1:false, 2:false, 3:false};
+
+function check(n) {
+    const code = document.getElementById('code'+n).value;
+    const out = document.getElementById('out'+n);
+    let feedback = '';
+    let pass = false;
+    
+    if (n===1) {
+        pass = code.includes('var') && code.includes('String') && code.includes('int') && code.includes('float') && code.includes('bool');
+        feedback = pass ? '<span class="success">✓ Perfect! You created typed variables!</span>' : '<span class="error">✗ Make sure you have var declarations with all 4 types</span>';
+    } else if (n===2) {
+        pass = code.includes('Vector2') && code.includes('+');
+        feedback = pass ? '<span class="success">✓ Great vector math!</span>' : '<span class="error">✗ Create two Vector2 variables and add them</span>';
+    } else if (n===3) {
+        pass = code.includes('int(') && code.includes('"') && (code.includes('*2') || code.includes('* 2'));
+        feedback = pass ? '<span class="success">✓ Type conversion mastered!</span>' : '<span class="error">✗ Use int() to convert and multiply by 2</span>';
+    }
+    
+    out.innerHTML = feedback;
+    if (pass) completed[n] = true;
+}
+
+function complete() {
+    if (completed[1] && completed[2] && completed[3]) {
+        const p = JSON.parse(localStorage.getItem('gdscript_quest_progress')) || {xp:0,completedLessons:[],achievements:[]};
+        if (!p.completedLessons.includes('w1_lab3')) {
+            p.completedLessons.push('w1_lab3');
+            p.xp += 100;
+            localStorage.setItem('gdscript_quest_progress', JSON.stringify(p));
+        }
+        window.location.href = 'final_boss.html';
+    } else {
+        alert('Complete all challenges first!');
+    }
+}
+</script>
+</body></html>

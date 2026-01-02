@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Project 2: Number Guesser</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#5b21b6 0%,#3730a3 100%);color:#fff;min-height:100vh;padding:20px}.container{max-width:1000px;margin:0 auto}.back-btn{background:rgba(255,255,255,0.1);color:white;border:2px solid rgba(255,255,255,0.3);padding:10px 20px;border-radius:20px;text-decoration:none;display:inline-block;margin-bottom:20px}.project-header{background:rgba(167,139,250,0.2);border:3px solid #a78bfa;border-radius:20px;padding:40px;text-align:center;margin-bottom:30px}.project-icon{font-size:4em;margin-bottom:15px}h1{font-size:2.5em;margin-bottom:10px}.difficulty{background:rgba(0,0,0,0.3);padding:8px 20px;border-radius:20px;margin:10px 5px;display:inline-block}.section{background:rgba(255,255,255,0.1);border-radius:15px;padding:30px;margin:25px 0}.section h2{color:#a78bfa;margin-bottom:20px;font-size:2em}.section h3{color:#c4b5fd;margin:20px 0 15px;font-size:1.5em}.requirements{display:grid;gap:15px;margin:20px 0}.requirement{background:rgba(0,0,0,0.3);border-left:4px solid #a78bfa;padding:15px 20px;border-radius:5px;display:flex;align-items:start}.requirement input{margin-right:15px;transform:scale(1.5)}.code-example{background:#1e293b;border:2px solid #334155;border-radius:10px;padding:20px;margin:20px 0;font-family:'Courier New',monospace;overflow-x:auto}.tip-box{background:rgba(251,191,36,0.2);border-left:4px solid #fbbf24;padding:20px;margin:25px 0;border-radius:5px}.stretch-goal{background:rgba(139,92,246,0.2);border:2px solid #8b5cf6;border-radius:10px;padding:20px;margin:15px 0}.btn{background:linear-gradient(135deg,#8b5cf6,#7c3aed);color:white;border:none;padding:15px 35px;border-radius:30px;font-size:1.1em;cursor:pointer;margin:10px}ul{margin-left:25px;line-height:2}li{margin:10px 0}</style>
+</head><body><div class="container">
+<a href="index.html" class="back-btn">← Back to World 1</a>
+<div class="project-header">
+<div class="project-icon">🎲</div>
+<h1>Project 2: Number Guesser</h1>
+<p style="font-size:1.2em;margin-top:15px">Build Your First Interactive Godot Game!</p>
+<div><span class="difficulty">⭐ Beginner</span><span class="difficulty">⏱️ 45 min</span><span class="difficulty">⭐ +300 XP</span></div>
+</div>
+
+<div class="section">
+<h2>🎯 Project Overview</h2>
+<p style="font-size:1.1em;line-height:1.8">Welcome to your first game project! You'll create a guessing game where players click a button to increase their score and buy upgrades to make clicking more powerful. This teaches UI interaction, game state, and basic game loops.</p>
+</div>
+
+<div class="section">
+<h2>📋 Core Requirements</h2>
+<p>Complete all of these:</p>
+<div class="requirements">
+<div class="requirement"><input type="checkbox" onchange="updateProgress()"><div><strong>1. Clickable button</strong><br>Add a Button node that players can click</div></div>
+<div class="requirement"><input type="checkbox" onchange="updateProgress()"><div><strong>2. Increment score</strong><br>Each click adds 1 to the score</div></div>
+<div class="requirement"><input type="checkbox" onchange="updateProgress()"><div><strong>3. Display score</strong><br>Use a Label to show current score</div></div>
+<div class="requirement"><input type="checkbox" onchange="updateProgress()"><div><strong>4. Upgrade system</strong><br>Button to buy upgrade (costs 10, increases click value)</div></div>
+<div class="requirement"><input type="checkbox" onchange="updateProgress()"><div><strong>5. Display click value</strong><br>Show how many points each click is worth</div></div>
+<div class="requirement"><input type="checkbox" onchange="updateProgress()"><div><strong>6. Prevent buying when broke</strong><br>Disable upgrade button when can't afford</div></div>
+<div class="requirement"><input type="checkbox" onchange="updateProgress()"><div><strong>7. Make it look good</strong><br>Add colors, fonts, and nice layout</div></div>
+<div class="requirement"><input type="checkbox" onchange="updateProgress()"><div><strong>8. Test thoroughly</strong><br>Make sure everything works</div></div>
+</div>
+</div>
+
+<div class="section">
+<h2>🛠️ Step-by-Step Guide</h2>
+<h3>Step 1: Scene Setup</h3>
+<p>In Godot, create this scene structure:</p>
+<ul>
+<li>Control (root, name: "ClickCounter")</li>
+<li>├─ CenterContainer</li>
+<li>│  └─ VBoxContainer</li>
+<li>│     ├─ Label (title)</li>
+<li>│     ├─ Label (score display)</li>
+<li>│     ├─ Button (click button)</li>
+<li>│     ├─ Label (click value)</li>
+<li>│     └─ Button (upgrade button)</li>
+</ul>
+
+<h3>Step 2: The Script</h3>
+<p>Attach this script to your root Control node:</p>
+<div class="code-example">
+<pre>extends Control
+
+var score: int = 0
+var click_value: int = 1
+var upgrade_cost: int = 10
+
+@onready var score_label = $CenterContainer/VBoxContainer/ScoreLabel
+@onready var click_button = $CenterContainer/VBoxContainer/ClickButton
+@onready var value_label = $CenterContainer/VBoxContainer/ValueLabel
+@onready var upgrade_button = $CenterContainer/VBoxContainer/UpgradeButton
+
+func _ready():
+    click_button.pressed.connect(_on_click_button_pressed)
+    upgrade_button.pressed.connect(_on_upgrade_button_pressed)
+    update_ui()
+
+func _on_click_button_pressed():
+    score += click_value
+    update_ui()
+
+func _on_upgrade_button_pressed():
+    if score >= upgrade_cost:
+        score -= upgrade_cost
+        click_value += 1
+        upgrade_cost = int(upgrade_cost * 1.5)
+        update_ui()
+
+func update_ui():
+    score_label.text = "Score: " + str(score)
+    value_label.text = "Click Value: " + str(click_value)
+    upgrade_button.text = "Upgrade (" + str(upgrade_cost) + ")"
+    upgrade_button.disabled = score < upgrade_cost
+</pre>
+</div>
+
+<div class="tip-box"><strong>💡 Pro Tip:</strong> The @onready keyword loads nodes when _ready() runs. It's like getting a reference to your UI elements!</div>
+
+<h3>Step 3: Make it Pretty</h3>
+<ul>
+<li>Select buttons → Theme Overrides → Font Sizes → make bigger</li>
+<li>Change button colors in Modulate property</li>
+<li>Add padding in VBoxContainer (Theme Overrides → Constants → Separation)</li>
+<li>Style your labels with different colors and sizes</li>
+</ul>
+
+<h3>Step 4: Test!</h3>
+<p>Press F5 to run. Make sure:</p>
+<ul>
+<li>Clicking increases score correctly</li>
+<li>Upgrades cost the right amount</li>
+<li>Can't buy when too expensive</li>
+<li>Click value increases after upgrade</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>🌟 Stretch Goals</h2>
+<div class="stretch-goal">
+<h4>⭐ Easy: Click Sound Effect</h4>
+<p>Add an AudioStreamPlayer and play a sound on each click!</p>
+</div>
+<div class="stretch-goal">
+<h4>⭐⭐ Medium: Auto-Clicker</h4>
+<p>Add a second upgrade that automatically adds points every second using a Timer node!</p>
+</div>
+<div class="stretch-goal">
+<h4>⭐⭐⭐ Hard: Save High Score</h4>
+<p>Use FileAccess to save and load the player's best score!</p>
+</div>
+</div>
+
+<div class="section">
+<h2>📚 What You'll Learn</h2>
+<ul>
+<li><strong>UI Design:</strong> Creating interfaces with Control nodes</li>
+<li><strong>Signals:</strong> Connecting button presses to functions</li>
+<li><strong>Game State:</strong> Managing variables that track progress</li>
+<li><strong>Conditionals:</strong> Checking if player can afford upgrades</li>
+<li><strong>String Formatting:</strong> Displaying dynamic text</li>
+</ul>
+</div>
+
+<div style="text-align:center;margin:40px 0">
+<button class="btn" onclick="markComplete()" style="font-size:1.2em;padding:15px 40px">✓ Mark Project Complete</button>
+</div>
+
+<script>
+function updateProgress(){/* visual feedback */}
+function markComplete(){
+const checks=document.querySelectorAll('.requirement input:checked');
+if(checks.length<8){alert('Complete all requirements first!');return}
+const p=JSON.parse(localStorage.getItem('gdscript_quest_progress'))||{xp:0,completedLessons:[],completedProjects:[],achievements:[]};
+if(!p.completedProjects.includes('w1_p2')){p.completedProjects.push('w1_p2');p.xp+=300;
+if(!p.achievements.includes('first_project'))p.achievements.push('first_project');
+if(!p.completedLessons.includes('w1_p2'))p.completedLessons.push('w1_p2');
+localStorage.setItem('gdscript_quest_progress',JSON.stringify(p));alert('🎉 +300 XP! Achievement: 🎮 Game Builder')}
+window.location.href='lesson5.html'}
+</script></body></html>

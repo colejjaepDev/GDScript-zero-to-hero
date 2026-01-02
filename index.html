@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDScript Quest: Zero to Hero</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            animation: fadeInDown 1s ease;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+        }
+
+        .xp-bar {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 30px 0;
+            animation: fadeIn 1.5s ease;
+        }
+
+        .xp-progress {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            height: 30px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .xp-fill {
+            background: linear-gradient(90deg, #4ade80, #22c55e);
+            height: 100%;
+            width: 0%;
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            font-weight: bold;
+        }
+
+        .worlds-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .world-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            animation: fadeInUp 1s ease;
+        }
+
+        .world-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255,255,255,0.25);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .world-card.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .world-card.locked:hover {
+            transform: none;
+        }
+
+        .world-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .world-title {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .world-subtitle {
+            font-size: 1em;
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        .lessons-count {
+            background: rgba(0,0,0,0.3);
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 0.9em;
+        }
+
+        .achievement-banner {
+            background: rgba(255,215,0,0.2);
+            border: 2px solid gold;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .achievement {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .achievement:hover {
+            transform: scale(1.1);
+            background: rgba(255,215,0,0.3);
+        }
+
+        .achievement.locked {
+            opacity: 0.3;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #4ade80;
+        }
+
+        .stat-label {
+            font-size: 1em;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 GDScript Quest</h1>
+            <p class="subtitle">From Zero to Hero - Your Epic Coding Journey</p>
+        </header>
+
+        <div class="xp-bar">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <span style="font-size: 1.2em;" id="levelDisplay">⭐ Level 1 - Novice Adventurer</span>
+                </div>
+                <div>
+                    <span style="font-size: 1.1em;" id="xpDisplay">0 / 1000 XP</span>
+                </div>
+            </div>
+            <div class="xp-progress">
+                <div class="xp-fill" id="xpFill">0%</div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="lessonsCount">0</div>
+                <div class="stat-label">Lessons Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="projectsCount">0</div>
+                <div class="stat-label">Projects Built</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="quizzesCount">0</div>
+                <div class="stat-label">Quizzes Aced</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="achievementsCount">0</div>
+                <div class="stat-label">Achievements</div>
+            </div>
+        </div>
+
+        <div class="achievement-banner">
+            <h2>🏆 Achievement Showcase</h2>
+            <div class="achievement-grid">
+                <div class="achievement locked" id="ach_first_steps">
+                    <div style="font-size: 2em;">🎯</div>
+                    <div style="font-size: 0.8em;">First Steps</div>
+                </div>
+                <div class="achievement locked" id="ach_code_master">
+                    <div style="font-size: 2em;">💡</div>
+                    <div style="font-size: 0.8em;">Code Master</div>
+                </div>
+                <div class="achievement locked" id="ach_2d_creator">
+                    <div style="font-size: 2em;">🎨</div>
+                    <div style="font-size: 0.8em;">2D Creator</div>
+                </div>
+                <div class="achievement locked" id="ach_3d_pioneer">
+                    <div style="font-size: 2em;">🌟</div>
+                    <div style="font-size: 0.8em;">3D Pioneer</div>
+                </div>
+                <div class="achievement locked" id="ach_on_fire">
+                    <div style="font-size: 2em;">🔥</div>
+                    <div style="font-size: 0.8em;">On Fire</div>
+                </div>
+                <div class="achievement locked" id="ach_godot_guru">
+                    <div style="font-size: 2em;">👑</div>
+                    <div style="font-size: 0.8em;">Godot Guru</div>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="text-align: center; margin: 40px 0; font-size: 2.5em;">Choose Your Path</h2>
+
+        <div class="worlds-grid">
+            <div class="world-card" onclick="location.href='world1/index.html'">
+                <div class="world-icon">🗺️</div>
+                <h2 class="world-title">World 1: Foundations</h2>
+                <p class="world-subtitle">The Tutorial Zone</p>
+                <p>Master the basics of GDScript and prepare for your adventure ahead!</p>
+                <div style="margin-top: 15px;">
+                    <span class="lessons-count">📚 8 Lessons</span>
+                    <span class="lessons-count">🎯 3 Quizzes</span>
+                    <span class="lessons-count">🎮 2 Projects</span>
+                </div>
+                <a href="world1/index.html" class="btn">Start Quest</a>
+            </div>
+
+            <div class="world-card locked" id="world2">
+                <div class="world-icon">⚡</div>
+                <h2 class="world-title">World 2: GDScript Core</h2>
+                <p class="world-subtitle">Getting Dangerous</p>
+                <p>Unlock powerful programming patterns and control structures.</p>
+                <div style="margin-top: 15px;">
+                    <span class="lessons-count">📚 10 Lessons</span>
+                    <span class="lessons-count">🎯 4 Quizzes</span>
+                    <span class="lessons-count">🎮 3 Projects</span>
+                </div>
+                <button class="btn" disabled style="opacity: 0.5;">🔒 Complete World 1</button>
+            </div>
+
+            <div class="world-card locked">
+                <div class="world-icon">🎨</div>
+                <h2 class="world-title">World 3: 2D Game Dev</h2>
+                <p class="world-subtitle">Level Up!</p>
+                <p>Create stunning 2D games with sprites, animations, and physics.</p>
+                <div style="margin-top: 15px;">
+                    <span class="lessons-count">📚 12 Lessons</span>
+                    <span class="lessons-count">🎯 5 Quizzes</span>
+                    <span class="lessons-count">🎮 4 Projects</span>
+                </div>
+                <button class="btn" disabled style="opacity: 0.5;">🔒 Complete World 2</button>
+            </div>
+
+            <div class="world-card locked">
+                <div class="world-icon">🏆</div>
+                <h2 class="world-title">World 4: Advanced 2D</h2>
+                <p class="world-subtitle">Master Tier</p>
+                <p>AI, state machines, tilemaps, and professional game architecture.</p>
+                <div style="margin-top: 15px;">
+                    <span class="lessons-count">📚 10 Lessons</span>
+                    <span class="lessons-count">🎯 4 Quizzes</span>
+                    <span class="lessons-count">🎮 3 Projects</span>
+                </div>
+                <button class="btn" disabled style="opacity: 0.5;">🔒 Complete World 3</button>
+            </div>
+
+            <div class="world-card locked">
+                <div class="world-icon">🌟</div>
+                <h2 class="world-title">World 5: 3D Fundamentals</h2>
+                <p class="world-subtitle">New Dimension</p>
+                <p>Enter the third dimension! Master 3D space and transforms.</p>
+                <div style="margin-top: 15px;">
+                    <span class="lessons-count">📚 11 Lessons</span>
+                    <span class="lessons-count">🎯 4 Quizzes</span>
+                    <span class="lessons-count">🎮 4 Projects</span>
+                </div>
+                <button class="btn" disabled style="opacity: 0.5;">🔒 Complete World 4</button>
+            </div>
+
+            <div class="world-card locked">
+                <div class="world-icon">👑</div>
+                <h2 class="world-title">World 6: 3D Mastery</h2>
+                <p class="world-subtitle">Godot Guru</p>
+                <p>Advanced 3D techniques, shaders, and your final boss project!</p>
+                <div style="margin-top: 15px;">
+                    <span class="lessons-count">📚 12 Lessons</span>
+                    <span class="lessons-count">🎯 5 Quizzes</span>
+                    <span class="lessons-count">🎮 5 Projects</span>
+                </div>
+                <button class="btn" disabled style="opacity: 0.5;">🔒 Complete World 5</button>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 60px 0 40px 0; padding: 40px; background: rgba(0,0,0,0.3); border-radius: 20px;">
+            <h2 style="font-size: 2em; margin-bottom: 20px;">📜 Your Quest Awaits!</h2>
+            <p style="font-size: 1.2em; max-width: 800px; margin: 0 auto; line-height: 1.6;">
+                From absolute beginner to professional game developer, this quest will guide you through every step of your journey. 
+                With your Python knowledge as a foundation, you'll master GDScript, build incredible 2D and 3D games, and unlock your potential as a game creator!
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Load progress
+        function loadProgress() {
+            const progress = JSON.parse(localStorage.getItem('gdscript_quest_progress')) || {
+                xp: 0,
+                level: 1,
+                completedLessons: [],
+                completedProjects: [],
+                completedQuizzes: [],
+                achievements: []
+            };
+            
+            // Update XP and level
+            const levels = [
+                {xp: 0, name: "Novice Adventurer"},
+                {xp: 1000, name: "Apprentice Coder"},
+                {xp: 2500, name: "Skilled Developer"},
+                {xp: 5000, name: "Expert Programmer"},
+                {xp: 8000, name: "2D Specialist"},
+                {xp: 12000, name: "2D Master"},
+                {xp: 16000, name: "3D Pioneer"},
+                {xp: 20000, name: "3D Expert"},
+                {xp: 25000, name: "Game Development Master"},
+                {xp: 30000, name: "Godot Guru"}
+            ];
+            
+            let currentLevel = 1;
+            let nextLevelXP = 1000;
+            
+            for (let i = levels.length - 1; i >= 0; i--) {
+                if (progress.xp >= levels[i].xp) {
+                    currentLevel = i + 1;
+                    nextLevelXP = i < levels.length - 1 ? levels[i + 1].xp : progress.xp;
+                    document.getElementById('levelDisplay').textContent = `⭐ Level ${currentLevel} - ${levels[i].name}`;
+                    break;
+                }
+            }
+            
+            document.getElementById('xpDisplay').textContent = `${progress.xp} / ${nextLevelXP} XP`;
+            
+            const xpPercentage = (progress.xp / nextLevelXP) * 100;
+            document.getElementById('xpFill').style.width = `${Math.min(xpPercentage, 100)}%`;
+            document.getElementById('xpFill').textContent = `${Math.round(xpPercentage)}%`;
+            
+            // Update stats
+            document.getElementById('lessonsCount').textContent = progress.completedLessons.length;
+            document.getElementById('projectsCount').textContent = progress.completedProjects.length;
+            document.getElementById('quizzesCount').textContent = progress.completedQuizzes.length;
+            document.getElementById('achievementsCount').textContent = progress.achievements.length;
+            
+            // Unlock achievements
+            progress.achievements.forEach(achievement => {
+                const elem = document.getElementById(`ach_${achievement}`);
+                if (elem) {
+                    elem.classList.remove('locked');
+                }
+            });
+            
+            // Check world unlocks
+            const world1Complete = progress.completedLessons.filter(l => l.startsWith('w1_')).length >= 13;
+            if (world1Complete) {
+                document.getElementById('world2').classList.remove('locked');
+                document.getElementById('world2').onclick = () => location.href = 'world2/index.html';
+            }
+        }
+
+        // Animate XP bar on load
+        setTimeout(() => {
+            loadProgress();
+        }, 500);
+
+        // Initialize progress if not exists
+        if (!localStorage.getItem('gdscript_quest_progress')) {
+            localStorage.setItem('gdscript_quest_progress', JSON.stringify({
+                xp: 0,
+                level: 1,
+                completedLessons: [],
+                completedProjects: [],
+                completedQuizzes: [],
+                achievements: []
+            }));
+        }
+    </script>
+</body>
+</html>

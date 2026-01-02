@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boss Battle: Syntax Sorcerer - GDScript Quest</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .boss-header {
+            background: rgba(220,38,38,0.3);
+            border: 3px solid #fbbf24;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(251,191,36,0.5); }
+            50% { box-shadow: 0 0 40px rgba(251,191,36,0.8); }
+        }
+
+        .boss-icon {
+            font-size: 5em;
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .boss-health {
+            background: rgba(0,0,0,0.5);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .health-bar {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            height: 30px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .health-fill {
+            background: linear-gradient(90deg, #dc2626, #991b1b);
+            height: 100%;
+            width: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 15px;
+            font-weight: bold;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-box {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            color: #fbbf24;
+            font-weight: bold;
+        }
+
+        .question-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 25px 0;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            background: #dc2626;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+
+        .question-points {
+            background: rgba(251,191,36,0.3);
+            color: #fbbf24;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .code-block {
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .options {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .option {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateX(10px);
+        }
+
+        .option.selected {
+            border-color: #fbbf24;
+            background: rgba(251,191,36,0.2);
+        }
+
+        .option.correct {
+            border-color: #10b981;
+            background: rgba(16,185,129,0.2);
+        }
+
+        .option.incorrect {
+            border-color: #ef4444;
+            background: rgba(239,68,68,0.2);
+        }
+
+        .option-letter {
+            background: rgba(255,255,255,0.2);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            color: white;
+            border: 2px solid #fbbf24;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(251,191,36,0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-color: #10b981;
+        }
+
+        .feedback {
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            border: 2px solid #10b981;
+        }
+
+        .feedback.incorrect {
+            border: 2px solid #ef4444;
+        }
+
+        .result-banner {
+            background: linear-gradient(135deg, #dc2626 0%, #450a0a 100%);
+            border: 3px solid #fbbf24;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin: 40px 0;
+            display: none;
+        }
+
+        .result-banner.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+
+        .result-title {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .result-score {
+            font-size: 3em;
+            color: #fbbf24;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .damage-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4em;
+            font-weight: bold;
+            color: #fbbf24;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+            pointer-events: none;
+            opacity: 0;
+            z-index: 1000;
+        }
+
+        .damage-popup.show {
+            animation: damageAnim 1s ease;
+        }
+
+        @keyframes damageAnim {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            50% { opacity: 1; transform: translate(-50%, -70%) scale(1.2); }
+            100% { opacity: 0; transform: translate(-50%, -90%) scale(0.8); }
+        }
+
+        .timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #fbbf24;
+            border-radius: 15px;
+            padding: 15px 25px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #fbbf24;
+        }
+
+        .timer.warning {
+            animation: flash 1s infinite;
+        }
+
+        @keyframes flash {
+            0%, 100% { background: rgba(220,38,38,0.8); }
+            50% { background: rgba(220,38,38,0.4); }
+        }
+    </style>
+</head>
+<body>
+    <div class="damage-popup" id="damagePopup">-10 HP!</div>
+    <div class="timer" id="timer">20:00</div>
+
+    <div class="container">
+        <div class="boss-header">
+            <div class="boss-icon">⚔️</div>
+            <h1>BOSS BATTLE: Syntax Sorcerer</h1>
+            <p style="font-size: 1.2em; margin-top: 10px;">Defeat the boss by mastering GDScript fundamentals!</p>
+            
+            <div class="boss-health">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                    <span style="font-size: 1.2em;">Boss Health</span>
+                    <span id="bossHP" style="font-size: 1.2em; color: #fbbf24;">200 / 200</span>
+                </div>
+                <div class="health-bar">
+                    <div class="health-fill" id="healthFill">100%</div>
+                </div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-value" id="questionsAnswered">0</div>
+                    <div>Questions Answered</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="correctCount">0</div>
+                    <div>Correct Answers</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="scoreDisplay">0</div>
+                    <div>Score</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 1 -->
+        <div class="question-card" id="q1">
+            <div class="question-header">
+                <span class="question-number">Question 1</span>
+                <span class="question-points">10 points</span>
+            </div>
+            <div class="question-text">
+                Which keyword is used to declare a variable in GDScript?
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption('q1', 0)">
+                    <div class="option-letter">A</div>
+                    <div>let</div>
+                </div>
+                <div class="option" onclick="selectOption('q1', 1)">
+                    <div class="option-letter">B</div>
+                    <div>var</div>
+                </div>
+                <div class="option" onclick="selectOption('q1', 2)">
+                    <div class="option-letter">C</div>
+                    <div>variable</div>
+                </div>
+                <div class="option" onclick="selectOption('q1', 3)">
+                    <div class="option-letter">D</div>
+                    <div>def</div>
+                </div>
+            </div>
+            <div class="feedback" id="feedback1"></div>
+            <button class="btn" onclick="checkAnswer('q1', 1, 10)">Submit Answer</button>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="question-card" id="q2">
+            <div class="question-header">
+                <span class="question-number">Question 2</span>
+                <span class="question-points">10 points</span>
+            </div>
+            <div class="question-text">
+                What does the _ready() function do in Godot?
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption('q2', 0)">
+                    <div class="option-letter">A</div>
+                    <div>Runs every frame</div>
+                </div>
+                <div class="option" onclick="selectOption('q2', 1)">
+                    <div class="option-letter">B</div>
+                    <div>Runs once when the node enters the scene tree</div>
+                </div>
+                <div class="option" onclick="selectOption('q2', 2)">
+                    <div class="option-letter">C</div>
+                    <div>Handles physics calculations</div>
+                </div>
+                <div class="option" onclick="selectOption('q2', 3)">
+                    <div class="option-letter">D</div>
+                    <div>Processes user input</div>
+                </div>
+            </div>
+            <div class="feedback" id="feedback2"></div>
+            <button class="btn" onclick="checkAnswer('q2', 1, 10)">Submit Answer</button>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="question-card" id="q3">
+            <div class="question-header">
+                <span class="question-number">Question 3</span>
+                <span class="question-points">10 points</span>
+            </div>
+            <div class="question-text">
+                Which of the following is the correct way to declare a typed variable in GDScript?
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption('q3', 0)">
+                    <div class="option-letter">A</div>
+                    <div><code>var health = 100: int</code></div>
+                </div>
+                <div class="option" onclick="selectOption('q3', 1)">
+                    <div class="option-letter">B</div>
+                    <div><code>var health: int = 100</code></div>
+                </div>
+                <div class="option" onclick="selectOption('q3', 2)">
+                    <div class="option-letter">C</div>
+                    <div><code>int var health = 100</code></div>
+                </div>
+                <div class="option" onclick="selectOption('q3', 3)">
+                    <div class="option-letter">D</div>
+                    <div><code>var int health = 100</code></div>
+                </div>
+            </div>
+            <div class="feedback" id="feedback3"></div>
+            <button class="btn" onclick="checkAnswer('q3', 1, 10)">Submit Answer</button>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="question-card" id="q4">
+            <div class="question-header">
+                <span class="question-number">Question 4</span>
+                <span class="question-points">10 points</span>
+            </div>
+            <div class="question-text">
+                What data type is <code>Vector2(10, 20)</code>?
+            </div>
+            <div class="options">
+                <div class="option" onclick="selectOption('q4', 0)">
+                    <div class="option-letter">A</div>
+                    <div>An array with two integers</div>
+                </div>
+                <div class="option" onclick="selectOption('q4', 1)">
+                    <div class="option-letter">B</div>
+                    <div>A 2D vector for positions/directions</div>
+                </div>
+                <div class="option" onclick="selectOption('q4', 2)">
+                    <div class="option-letter">C</div>
+                    <div>A function call</div>
+                </div>
+                <div class="option" onclick="selectOption('q4', 3)">
+                    <div class="option-letter">D</div>
+                    <div>A dictionary</div>
+                </div>
+            </div>
+            <div class="feedback" id="feedback4"></div>
+            <button class="btn" onclick="checkAnswer('q4', 1, 10)">Submit Answer</button>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="question-card" id="q5">
+            <div class="question-header">
+                <span class="question-number">Question 5</span>
+                <span class="question-points">15 points</span>
+            </div>
+            <div class="question-text">
+                Find the error in this code:
+            </div>
+            <div class="code-block"><pre>extends Node
+
+func _ready()
+    var player_name = "Hero"
+    print(player_name)</pre></div>
+            <div class="options">
+                <div class="option" onclick="selectOption('q5', 0)">
+                    <div class="option-letter">A</div>
+                    <div>Missing colon (:) after _ready()</div>
+                </div>
+                <div class="option" onclick="selectOption('q5', 1)">
+                    <div class="option-letter">B</div>
+                    <div>var keyword is wrong</div>
+                </div>
+                <div class="option" onclick="selectOption('q5', 2)">
+                    <div class="option-letter">C</div>
+                    <div>print() is not a valid function</div>
+                </div>
+                <div class="option" onclick="selectOption('q5', 3)">
+                    <div class="option-letter">D</div>
+                    <div>There is no error</div>
+                </div>
+            </div>
+            <div class="feedback" id="feedback5"></div>
+            <button class="btn" onclick="checkAnswer('q5', 0, 15)">Submit Answer</button>
+        </div>
+
+        <div class="result-banner" id="resultBanner">
+            <div class="result-icon" id="resultIcon">🎉</div>
+            <div class="result-title" id="resultTitle">Victory!</div>
+            <div class="result-score" id="finalScore">50 / 50</div>
+            <p id="resultMessage" style="font-size: 1.3em; margin: 20px 0;"></p>
+            <div style="margin-top: 30px;">
+                <button class="btn btn-submit" onclick="location.href='index.html'">Return to World 1</button>
+                <button class="btn btn-submit" onclick="location.href='../world2/index.html'">Continue to World 2 →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let score = 0;
+        let questionsAnswered = 0;
+        let correctAnswers = 0;
+        let selectedAnswers = {};
+        let bossHealth = 200;
+        let timeLeft = 1200; // 20 minutes in seconds
+
+        // Timer
+        const timerInterval = setInterval(() => {
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft <= 60) {
+                document.getElementById('timer').classList.add('warning');
+            }
+            
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                showResults();
+            }
+        }, 1000);
+
+        function selectOption(questionId, optionIndex) {
+            const options = document.querySelectorAll(`#${questionId} .option`);
+            options.forEach((opt, idx) => {
+                opt.classList.remove('selected');
+                if (idx === optionIndex) {
+                    opt.classList.add('selected');
+                }
+            });
+            selectedAnswers[questionId] = optionIndex;
+        }
+
+        function checkAnswer(questionId, correctIndex, points) {
+            const selectedIndex = selectedAnswers[questionId];
+            
+            if (selectedIndex === undefined) {
+                alert('Please select an answer first!');
+                return;
+            }
+
+            const options = document.querySelectorAll(`#${questionId} .option`);
+            const feedback = document.getElementById(`feedback${questionId.replace('q', '')}`);
+            const isCorrect = selectedIndex === correctIndex;
+
+            options[selectedIndex].classList.add(isCorrect ? 'correct' : 'incorrect');
+            options[correctIndex].classList.add('correct');
+
+            questionsAnswered++;
+            document.getElementById('questionsAnswered').textContent = questionsAnswered;
+
+            if (isCorrect) {
+                score += points;
+                correctAnswers++;
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = `
+                    <h3 style="color: #10b981;">✓ Correct! +${points} points</h3>
+                    <p>Great job! You're one step closer to defeating the boss!</p>
+                `;
+                
+                // Deal damage to boss
+                dealDamage(points);
+                
+                document.getElementById('correctCount').textContent = correctAnswers;
+            } else {
+                feedback.className = 'feedback incorrect show';
+                feedback.innerHTML = `
+                    <h3 style="color: #ef4444;">✗ Incorrect</h3>
+                    <p>Study the material again to understand this concept better!</p>
+                `;
+            }
+
+            document.getElementById('scoreDisplay').textContent = score;
+
+            // Disable the question
+            options.forEach(opt => opt.style.pointerEvents = 'none');
+            document.querySelector(`#${questionId} .btn`).disabled = true;
+
+            // Check if all questions answered
+            if (questionsAnswered === 5) {
+                setTimeout(showResults, 2000);
+            }
+        }
+
+        function dealDamage(damage) {
+            bossHealth -= damage;
+            if (bossHealth < 0) bossHealth = 0;
+            
+            const percentage = (bossHealth / 200) * 100;
+            document.getElementById('healthFill').style.width = `${percentage}%`;
+            document.getElementById('bossHP').textContent = `${bossHealth} / 200`;
+            
+            // Show damage popup
+            const popup = document.getElementById('damagePopup');
+            popup.textContent = `-${damage} HP!`;
+            popup.classList.add('show');
+            setTimeout(() => popup.classList.remove('show'), 1000);
+        }
+
+        function showResults() {
+            clearInterval(timerInterval);
+            
+            const totalPoints = 55; // Total possible points
+            const percentage = (score / totalPoints) * 100;
+            const passed = percentage >= 80;
+
+            const banner = document.getElementById('resultBanner');
+            const icon = document.getElementById('resultIcon');
+            const title = document.getElementById('resultTitle');
+            const message = document.getElementById('resultMessage');
+            const finalScore = document.getElementById('finalScore');
+
+            finalScore.textContent = `${score} / ${totalPoints} (${Math.round(percentage)}%)`;
+
+            if (passed) {
+                icon.textContent = '🎉';
+                title.textContent = 'BOSS DEFEATED!';
+                message.innerHTML = `
+                    Congratulations! You've mastered the fundamentals of GDScript!<br>
+                    <strong style="color: #10b981;">+200 XP earned!</strong><br>
+                    Achievement Unlocked: ⚔️ Syntax Slayer<br>
+                    World 2 is now available!
+                `;
+                
+                // Save progress
+                const progress = JSON.parse(localStorage.getItem('gdscript_quest_progress')) || {
+                    xp: 0,
+                    completedLessons: [],
+                    achievements: []
+                };
+                progress.xp += 200;
+                if (!progress.achievements.includes('syntax_slayer')) {
+                    progress.achievements.push('syntax_slayer');
+                }
+                if (!progress.completedLessons.includes('w1_boss1')) {
+                    progress.completedLessons.push('w1_boss1');
+                }
+                localStorage.setItem('gdscript_quest_progress', JSON.stringify(progress));
+            } else {
+                icon.textContent = '💀';
+                title.textContent = 'Boss Battle Failed';
+                message.innerHTML = `
+                    You need 80% to pass (${Math.round(80 - percentage)}% more).<br>
+                    Review the lessons and try again!<br>
+                    Don't give up - every great developer started here!
+                `;
+            }
+
+            banner.classList.add('show');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

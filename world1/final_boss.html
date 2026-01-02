@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>FINAL BOSS: Foundation Master</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#7f1d1d 0%,#450a0a 100%);color:#fff;min-height:100vh;padding:20px}.container{max-width:900px;margin:0 auto}.boss-header{background:rgba(220,38,38,0.3);border:3px solid #fbbf24;border-radius:20px;padding:30px;text-align:center;margin-bottom:30px;animation:pulse 2s infinite}@keyframes pulse{0%,100%{box-shadow:0 0 20px rgba(251,191,36,0.5)}50%{box-shadow:0 0 40px rgba(251,191,36,0.8)}}.boss-icon{font-size:5em;margin-bottom:15px;animation:bounce 2s infinite}@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}h1{font-size:2.5em;margin-bottom:10px}.boss-health{background:rgba(0,0,0,0.5);border-radius:15px;padding:15px;margin:20px 0}.health-bar{background:rgba(255,255,255,0.2);border-radius:10px;height:30px;overflow:hidden;margin-top:10px}.health-fill{background:linear-gradient(90deg,#dc2626,#991b1b);height:100%;width:100%;transition:width 0.5s;display:flex;align-items:center;justify-content:flex-end;padding-right:15px;font-weight:bold}.question-card{background:rgba(255,255,255,0.1);border-radius:15px;padding:30px;margin:25px 0;border:2px solid rgba(255,255,255,0.2)}.question-header{display:flex;justify-content:space-between;margin-bottom:20px}.question-number{background:#dc2626;padding:10px 20px;border-radius:25px}.question-text{font-size:1.2em;margin-bottom:20px}.options{display:grid;gap:15px}.option{background:rgba(255,255,255,0.05);border:2px solid rgba(255,255,255,0.2);border-radius:10px;padding:15px 20px;cursor:pointer;transition:all 0.3s;display:flex;align-items:center}.option:hover{background:rgba(255,255,255,0.1);transform:translateX(10px)}.option.selected{border-color:#fbbf24;background:rgba(251,191,36,0.2)}.option.correct{border-color:#10b981;background:rgba(16,185,129,0.2)}.option.incorrect{border-color:#ef4444;background:rgba(239,68,68,0.2)}.option-letter{background:rgba(255,255,255,0.2);width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-right:15px;font-weight:bold;font-size:1.2em}.btn{background:linear-gradient(135deg,#dc2626,#991b1b);color:white;border:2px solid #fbbf24;padding:15px 40px;border-radius:30px;font-size:1.2em;cursor:pointer;transition:all 0.3s;margin:10px}.btn:hover{transform:scale(1.05);box-shadow:0 10px 30px rgba(251,191,36,0.5)}.feedback{background:rgba(0,0,0,0.5);border-radius:10px;padding:20px;margin-top:20px;display:none}.feedback.show{display:block}.result-banner{background:linear-gradient(135deg,#dc2626,#450a0a);border:3px solid #fbbf24;border-radius:20px;padding:40px;text-align:center;margin:40px 0;display:none}.result-banner.show{display:block}</style>
+</head><body><div class="container">
+<div class="boss-header">
+<div class="boss-icon">⚔️</div>
+<h1>BOSS BATTLE: Foundation Master</h1>
+<p style="font-size:1.2em;margin-top:10px">Defeat the boss by answering correctly!</p>
+<div class="boss-health">
+<div style="display:flex;justify-content:space-between;margin-bottom:10px">
+<span style="font-size:1.2em">Boss Health</span>
+<span id="bossHP" style="font-size:1.2em;color:#fbbf24">200/200</span>
+</div>
+<div class="health-bar"><div class="health-fill" id="healthFill">100%</div></div>
+</div>
+<div style="margin-top:20px"><span style="background:rgba(0,0,0,0.3);padding:10px 20px;border-radius:20px;margin:5px;display:inline-block">Score: <span id="score">0</span></span></div>
+</div>
+
+<div class="question-card" id="q1">
+<div class="question-header"><span class="question-number">Question 1</span><span style="background:rgba(251,191,36,0.3);color:#fbbf24;padding:10px 20px;border-radius:25px">+20</span></div>
+<div class="question-text">Which keyword declares a variable in GDScript?</div>
+<div class="options">
+<div class="option" onclick="selectOption(0,0)"><div class="option-letter">A</div><div>let</div></div>
+<div class="option" onclick="selectOption(0,1)"><div class="option-letter">B</div><div>var</div></div>
+<div class="option" onclick="selectOption(0,2)"><div class="option-letter">C</div><div>def</div></div>
+<div class="option" onclick="selectOption(0,3)"><div class="option-letter">D</div><div>set</div></div>
+</div>
+<div class="feedback" id="f1"></div>
+<button class="btn" onclick="checkAnswer(0,1,20)">Submit</button>
+</div>
+
+<div class="question-card" id="q2">
+<div class="question-header"><span class="question-number">Question 2</span><span style="background:rgba(251,191,36,0.3);color:#fbbf24;padding:10px 20px;border-radius:25px">+20</span></div>
+<div class="question-text">What does _ready() function do?</div>
+<div class="options">
+<div class="option" onclick="selectOption(1,0)"><div class="option-letter">A</div><div>Runs every frame</div></div>
+<div class="option" onclick="selectOption(1,1)"><div class="option-letter">B</div><div>Runs once when node enters scene</div></div>
+<div class="option" onclick="selectOption(1,2)"><div class="option-letter">C</div><div>Handles physics</div></div>
+<div class="option" onclick="selectOption(1,3)"><div class="option-letter">D</div><div>Processes input</div></div>
+</div>
+<div class="feedback" id="f2"></div>
+<button class="btn" onclick="checkAnswer(1,1,20)">Submit</button>
+</div>
+
+<div class="question-card" id="q3">
+<div class="question-header"><span class="question-number">Question 3</span><span style="background:rgba(251,191,36,0.3);color:#fbbf24;padding:10px 20px;border-radius:25px">+20</span></div>
+<div class="question-text">Which is correct type hint syntax?</div>
+<div class="options">
+<div class="option" onclick="selectOption(2,0)"><div class="option-letter">A</div><div>var health = 100: int</div></div>
+<div class="option" onclick="selectOption(2,1)"><div class="option-letter">B</div><div>var health: int = 100</div></div>
+<div class="option" onclick="selectOption(2,2)"><div class="option-letter">C</div><div>int var health = 100</div></div>
+<div class="option" onclick="selectOption(2,3)"><div class="option-letter">D</div><div>var health int = 100</div></div>
+</div>
+<div class="feedback" id="f3"></div>
+<button class="btn" onclick="checkAnswer(2,1,20)">Submit</button>
+</div>
+
+<div class="question-card" id="q4">
+<div class="question-header"><span class="question-number">Question 4</span><span style="background:rgba(251,191,36,0.3);color:#fbbf24;padding:10px 20px;border-radius:25px">+20</span></div>
+<div class="question-text">What type is Vector2(10, 20)?</div>
+<div class="options">
+<div class="option" onclick="selectOption(3,0)"><div class="option-letter">A</div><div>An array</div></div>
+<div class="option" onclick="selectOption(3,1)"><div class="option-letter">B</div><div>A 2D vector for positions/directions</div></div>
+<div class="option" onclick="selectOption(3,2)"><div class="option-letter">C</div><div>A function</div></div>
+<div class="option" onclick="selectOption(3,3)"><div class="option-letter">D</div><div>A dictionary</div></div>
+</div>
+<div class="feedback" id="f4"></div>
+<button class="btn" onclick="checkAnswer(3,1,20)">Submit</button>
+</div>
+
+<div class="question-card" id="q5">
+<div class="question-header"><span class="question-number">Question 5</span><span style="background:rgba(251,191,36,0.3);color:#fbbf24;padding:10px 20px;border-radius:25px">+20</span></div>
+<div class="question-text">What's wrong: func _ready() print("Hi")</div>
+<div class="options">
+<div class="option" onclick="selectOption(4,0)"><div class="option-letter">A</div><div>Missing colon (:)</div></div>
+<div class="option" onclick="selectOption(4,1)"><div class="option-letter">B</div><div>Wrong function name</div></div>
+<div class="option" onclick="selectOption(4,2)"><div class="option-letter">C</div><div>print() is wrong</div></div>
+<div class="option" onclick="selectOption(4,3)"><div class="option-letter">D</div><div>No error</div></div>
+</div>
+<div class="feedback" id="f5"></div>
+<button class="btn" onclick="checkAnswer(4,0,20)">Submit</button>
+</div>
+
+<div class="result-banner" id="result">
+<div style="font-size:5em;margin-bottom:20px" id="resultIcon">🎉</div>
+<div style="font-size:2.5em;margin-bottom:15px" id="resultTitle">Victory!</div>
+<div style="font-size:3em;color:#fbbf24;margin:20px 0" id="finalScore">200/200</div>
+<p id="resultMsg" style="font-size:1.3em;margin:20px 0"></p>
+<button class="btn" style="background:linear-gradient(135deg,#10b981,#059669)" onclick="location.href='../index.html'">Continue to Projects →</button>
+</div>
+
+<script>
+let score=0, bossHP=200, selected={}, answered=0;
+function selectOption(q,opt){document.querySelectorAll(`#q${q+1} .option`).forEach((o,i)=>{o.classList.remove('selected');if(i===opt)o.classList.add('selected')});selected[q]=opt}
+function checkAnswer(q,correct,pts){if(selected[q]===undefined){alert('Select an answer!');return}
+const opts=document.querySelectorAll(`#q${q+1} .option`);const fb=document.getElementById(`f${q+1}`);
+const isCorrect=selected[q]===correct;opts[selected[q]].classList.add(isCorrect?'correct':'incorrect');opts[correct].classList.add('correct');
+answered++;if(isCorrect){score+=pts;bossHP-=20;document.getElementById('score').textContent=score;
+const pct=(bossHP/100)*100;document.getElementById('healthFill').style.width=pct+'%';document.getElementById('healthFill').textContent=pct+'%';
+document.getElementById('bossHP').textContent=bossHP+'/100';fb.innerHTML='<span style="color:#10b981">✓ Correct! +'+pts+' points</span>';
+}else{fb.innerHTML='<span style="color:#ef4444">✗ Incorrect</span>'}
+fb.classList.add('show');opts.forEach(o=>o.style.pointerEvents='none');
+document.querySelector(`#q${q+1} .btn`).disabled=true;if(answered===5)setTimeout(showResults,2000)}
+function showResults(){const passed=score>=80;const rb=document.getElementById('result');
+const icon=document.getElementById('resultIcon');const title=document.getElementById('resultTitle');
+const msg=document.getElementById('resultMsg');document.getElementById('finalScore').textContent=score+'/100';
+if(passed){icon.textContent='🎉';title.textContent='BOSS DEFEATED!';msg.innerHTML='You mastered GDScript fundamentals!<br><strong style="color:#10b981">+200 XP earned!</strong><br>Achievement: ⚔️ Syntax Slayer';
+const p=JSON.parse(localStorage.getItem('gdscript_quest_progress'))||{xp:0,completedLessons:[],completedQuizzes:[],achievements:[]};
+p.xp+=200;if(!p.achievements.includes('syntax_slayer'))p.achievements.push('syntax_slayer');
+if(!p.completedQuizzes.includes('w1_final'))p.completedQuizzes.push('w1_final');
+if(!p.completedLessons.includes('w1_final'))p.completedLessons.push('w1_final');
+localStorage.setItem('gdscript_quest_progress',JSON.stringify(p))
+}else{icon.textContent='💀';title.textContent='Defeat!';msg.innerHTML='Need 80% to pass. Review lessons and try again!'}
+rb.classList.add('show');window.scrollTo({top:0,behavior:'smooth'})}
+</script></body></html>

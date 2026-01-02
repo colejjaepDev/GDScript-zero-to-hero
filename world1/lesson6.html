@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Arrays & Dictionaries</title>
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%);color:#e2e8f0;min-height:100vh;padding:20px}.container{max-width:900px;margin:0 auto}.nav-bar{display:flex;justify-content:space-between;margin-bottom:30px}.nav-btn{background:rgba(255,255,255,0.1);color:white;border:2px solid rgba(255,255,255,0.3);padding:10px 20px;border-radius:20px;cursor:pointer;text-decoration:none;transition:all 0.3s ease}.nav-btn:hover{background:rgba(255,255,255,0.2)}header{background:rgba(16,185,129,0.2);border-left:5px solid #10b981;padding:30px;border-radius:10px;margin-bottom:30px}h1{font-size:2.5em;margin-bottom:10px}.content-section{background:rgba(255,255,255,0.05);border-radius:10px;padding:30px;margin:25px 0;line-height:1.8}.content-section h2{color:#10b981;margin-bottom:20px;font-size:1.8em}.content-section h3{color:#60a5fa;margin:25px 0 15px 0;font-size:1.4em}.code-block{background:#1e293b;border:2px solid #334155;border-radius:8px;padding:20px;margin:20px 0;font-family:'Courier New',monospace;overflow-x:auto}ul,ol{margin-left:25px;line-height:1.8}li{margin:10px 0}code{background:rgba(16,185,129,0.2);padding:2px 6px;border-radius:3px;color:#10b981;font-family:'Courier New',monospace}.btn{background:linear-gradient(135deg,#10b981 0%,#059669 100%);color:white;border:none;padding:15px 40px;border-radius:25px;font-size:1.1em;cursor:pointer;transition:all 0.3s ease}.btn:hover{transform:scale(1.05);box-shadow:0 10px 30px rgba(16,185,129,0.3)}</style>
+</head><body><div class="container">
+<div class="nav-bar"><a href="index.html" class="nav-btn">← World 1</a><a href="lab3.html" class="nav-btn">Next →</a></div>
+<header><h1>📚 Arrays & Dictionaries</h1><p>+75 XP</p></header>
+
+<div class="content-section">
+    <h2>📚 Data Structures</h2>
+    
+    <h3>Arrays (Lists)</h3>
+    <div class="code-block">
+<pre># Create array
+var items = ["Sword", "Shield", "Potion"]
+var numbers = [1, 2, 3, 4, 5]
+var mixed = [1, "text", true, Vector2(0, 0)]
+
+# Type-hinted array
+var enemies: Array[String] = ["Goblin", "Orc"]
+</pre>
+    </div>
+
+    <h3>Array Methods</h3>
+    <div class="code-block">
+<pre>var inventory = []
+
+# Add items
+inventory.append("Sword")  # Add to end
+inventory.push_back("Shield")  # Same as append
+inventory.insert(0, "Potion")  # Insert at index
+
+# Remove items
+inventory.erase("Sword")  # Remove by value
+inventory.pop_back()  # Remove last
+inventory.pop_front()  # Remove first
+
+# Access
+print(inventory[0])  # First item
+print(inventory[-1])  # Last item
+print(inventory.size())  # Length
+
+# Check if exists
+if "Sword" in inventory:
+    print("Has sword!")
+</pre>
+    </div>
+
+    <h3>Dictionaries</h3>
+    <div class="code-block">
+<pre># Create dictionary
+var player_stats = {
+    "name": "Hero",
+    "health": 100,
+    "level": 5,
+    "inventory": ["Sword", "Potion"]
+}
+
+# Access values
+print(player_stats["name"])
+print(player_stats.health)  # Also works!
+
+# Add/modify
+player_stats["mana"] = 50
+player_stats.health = 80
+
+# Check if key exists
+if "name" in player_stats:
+    print(player_stats["name"])
+
+# Get keys and values
+for key in player_stats.keys():
+    print(key, ": ", player_stats[key])
+</pre>
+    </div>
+
+    <h3>Nested Structures</h3>
+    <div class="code-block">
+<pre>var game_data = {
+    "player": {
+        "name": "Hero",
+        "stats": {
+            "health": 100,
+            "mana": 50
+        },
+        "inventory": ["Sword", "Potion"]
+    },
+    "enemies": [
+        {"name": "Goblin", "health": 30},
+        {"name": "Orc", "health": 50}
+    ]
+}
+
+# Access nested data
+print(game_data["player"]["stats"]["health"])
+print(game_data.enemies[0].name)
+</pre>
+    </div>
+
+    <h3>Practical Examples</h3>
+    <div class="code-block">
+<pre># Inventory system
+var inventory = []
+
+func add_item(item: String):
+    inventory.append(item)
+    print("Added ", item)
+
+func has_item(item: String) -> bool:
+    return item in inventory
+
+# Quest system
+var quests = {
+    "quest_1": {"name": "Slay Goblin", "complete": false},
+    "quest_2": {"name": "Find Sword", "complete": true}
+}
+
+func complete_quest(quest_id: String):
+    if quest_id in quests:
+        quests[quest_id]["complete"] = true
+</pre>
+    </div>
+</div>
+
+<div style="text-align:center;margin:40px 0"><button class="btn" onclick="complete()">✓ Mark Complete</button></div>
+</div><script>function complete(){const p=JSON.parse(localStorage.getItem('gdscript_quest_progress'))||{xp:0,completedLessons:[],achievements:[]};if(!p.completedLessons.includes('w1_l6')){p.completedLessons.push('w1_l6');p.xp+=75;localStorage.setItem('gdscript_quest_progress',JSON.stringify(p))}window.location.href='lab3.html'}</script></body></html>
